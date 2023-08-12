@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Courses</title>
+</head>
+
+<body>
+
+<section layout:fragment="content">
+
+    <div class="container p-3">
+        <div class="row p-3">
+            <h2>Pre Courses of "[[${course.name}]] ([[${course.id}]])"</h2>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="h-5">Pre Courses</div>
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="table-dark">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Delete</th>
+                    </thead>
+                    <tbody>
+                    <tr th:each="preCourse : ${course.preCourses}" th:object="${preCourse}">
+                        <td th:text="*{id}"></td>
+                        <td th:text="*{name}"></td>
+                        <td>
+                            <a class="btn btn-danger"
+                               th:href="@{/courses/pre-courses/delete/{id}(id=${course.id}, preCourseId=${preCourse.id})}">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col">
+                <div class="h-5">All Courses</div>
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="table-dark">
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Add</th>
+                    </thead>
+                    <tbody>
+                    <tr th:each="_course : ${courses}" th:object="${_course}">
+                        <td th:text="*{id}"></td>
+                        <td th:text="*{name}"></td>
+                        <td>
+                            <a class="btn btn-primary"
+                               th:href="@{/courses/pre-courses/add/{id}(id=${course.id}, preCourseId=${_course.id})}">Add</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <a class="btn btn-primary" href="/courses">Done</a>
+
+    </div>
+</section>
+</body>
+</html>

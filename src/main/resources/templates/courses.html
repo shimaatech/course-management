@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Courses</title>
+</head>
+
+<body>
+
+<section layout:fragment="content">
+
+    <div class="container p-3">
+        <div class="row">
+            <h2>Lecturers</h2>
+        </div>
+
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+            <th>ID</th>
+            <th>Name</th>
+            <th>Hours</th>
+            <th>Pre Courses</th>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${courses}" th:object="${course}">
+                <td th:text="*{id}"></td>
+                <td th:text="*{name}"></td>
+                <td th:text="*{hours}"></td>
+                <td th:with="hasPreCourses=${!course.preCourses.isEmpty()}">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <th:block th:if="${hasPreCourses}">
+                                <span  th:each="preCourse: *{preCourses}" class="p-3">[[${preCourse.name}]] ([[${preCourse.id}]])</span>
+                            </th:block>
+                            <span th:unless="${hasPreCourses}">None</span>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-warning" th:href="@{/courses/pre-courses/{id}(id=${course.id})}">Manage</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <a class="btn btn-primary" href="/courses/new">Add Course</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

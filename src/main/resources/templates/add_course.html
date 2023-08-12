@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add Lecturer</title>
+    <title>Add Course</title>
 </head>
 
 <body>
@@ -17,10 +17,10 @@
         <div class="row col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Add Lecturer</h2>
+                    <h2 class="text-center">Add Course</h2>
                 </div>
                 <div class="card-body">
-                    <form role="form" method="post" th:action="@{/lecturers}" th:object="${lecturer}">
+                    <form role="form" method="post" th:action="@{/courses}" th:object="${course}">
                         <div class="mb-3">
                             <label class="form-label"> ID </label>
                             <input
@@ -43,41 +43,18 @@
                             />
                         </div>
 
-
                         <div class="mb-3">
-                            <label class="form-label"> Last Name </label>
+                            <label class="form-label"> Hours </label>
                             <input
-                                    type="text"
+                                    type="number"
                                     class="form-control"
-                                    id="lastName"
-                                    name="lastName"
-                                    th:field="*{lastName}"
+                                    id="hours"
+                                    name="hours"
+                                    th:field="*{hours}"
                             />
                         </div>
 
 
-                        <div class="mb-3">
-                            <label class="form-label"> Phone </label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    id="phone"
-                                    name="phone"
-                                    th:field="*{phone}"
-                            />
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label class="form-label"> Mail </label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    id="mail"
-                                    name="mail"
-                                    th:field="*{mail}"
-                            />
-                        </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>

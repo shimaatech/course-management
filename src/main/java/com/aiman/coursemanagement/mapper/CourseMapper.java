@@ -9,14 +9,18 @@ public class CourseMapper {
         return Course.builder()
                 .id(dto.getId())
                 .name(dto.getName())
+                .hours(dto.getHours())
+                .preCourses(dto.getPreCourses())
                 .build();
     }
 
 
-    public static CourseDto mapToCourse(Course course) {
+    public static CourseDto mapToCourseDto(Course course) {
         return CourseDto.builder()
                 .id(course.getId())
                 .name(course.getName())
+                .hours(course.getHours())
+                .preCourses(course.getPreCourses())
                 .build();
     }
 
