@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Courses</title>
+
 </head>
 
 <body>
@@ -22,25 +23,15 @@
             <th>ID</th>
             <th>Name</th>
             <th>Hours</th>
-            <th>Pre Courses</th>
+            <th>Pre Course</th>
             </thead>
             <tbody>
             <tr th:each="course : ${courses}" th:object="${course}">
                 <td th:text="*{id}"></td>
                 <td th:text="*{name}"></td>
                 <td th:text="*{hours}"></td>
-                <td th:with="hasPreCourses=${!course.preCourses.isEmpty()}">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <th:block th:if="${hasPreCourses}">
-                                <span  th:each="preCourse: *{preCourses}" class="p-3">[[${preCourse.name}]] ([[${preCourse.id}]])</span>
-                            </th:block>
-                            <span th:unless="${hasPreCourses}">None</span>
-                        </div>
-                        <div class="col">
-                            <a class="btn btn-warning" th:href="@{/courses/pre-courses/{id}(id=${course.id})}">Manage</a>
-                        </div>
-                    </div>
+                <td th:with="hasPreCourse=${course.preCourse != null}">
+                    <div th:replace=":: pre-course-selector(course=${course})"></div>
                 </td>
             </tr>
             </tbody>
@@ -50,6 +41,45 @@
             <a class="btn btn-primary" href="/courses/new">Add Course</a>
         </div>
     </div>
+
+
+    <script>
+    function removePreCourse(courseId) {
+        fetch('/courses/' + courseId + '/remove-pre-course', {method: 'POST'});
+    }
+
+    function setPreCourse(courseId, preCourseId) {
+        fetch('/courses/' + courseId + '/set-pre-course?preCourseId=' + preCourseId, {method: 'POST'});
+    }
+
+    function onPreCourseSelected(selector) {
+        var courseId= selector.id;
+        selectedPreCourse = selector.value;
+        if (selectedPreCourse == 'none') {
+            removePreCourse(courseId);
+        } else {
+            setPreCourse(courseId, selectedPreCourse);
+        }
+    }
+
+    </script>
+
 </section>
+
+
+<div th:fragment="pre-course-selector(course)">
+    <select th:id="${course.id}" onchange="onPreCourseSelected(this)" class="selectpicker">
+        <option th:selected="${course.preCourse == null}" value="none">None</option>
+        <th:block th:each="preCourse : ${courses}">
+            <option th:if="${!#strings.equals(course.id, preCourse.id)}"
+                    th:text="${preCourse.name}"
+                    th:value="${preCourse.id}"
+                    th:selected="${course.preCourse != null && #strings.equals(course.preCourse.id, preCourse.id)}">
+            </option>
+        </th:block>
+    </select>
+</div>
+
+
 </body>
 </html>

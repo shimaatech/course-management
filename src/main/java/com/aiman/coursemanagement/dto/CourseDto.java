@@ -21,6 +21,6 @@ public class CourseDto {
 
     private Integer hours;
 
-    private List<Course> preCourses;
+    private CourseDto preCourse;
 
 }

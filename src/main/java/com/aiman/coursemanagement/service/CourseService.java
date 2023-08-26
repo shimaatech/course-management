@@ -1,11 +1,8 @@
 package com.aiman.coursemanagement.service;
 
 import com.aiman.coursemanagement.dto.CourseDto;
-import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.entity.Course;
-import com.aiman.coursemanagement.entity.Lecturer;
 import com.aiman.coursemanagement.mapper.CourseMapper;
-import com.aiman.coursemanagement.mapper.LecturerMapper;
 import com.aiman.coursemanagement.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,15 +32,24 @@ public class CourseService {
         return CourseMapper.mapToCourseDto(courseRepository.findById(courseId).orElseThrow());
     }
 
-    public void deletePreCourse(String id, String preCourseId) {
+    public void removePreCourse(String id) {
         final Course course = courseRepository.findById(id).orElseThrow();
-        course.getPreCourses().removeIf(c -> c.getId().equals(preCourseId));
+        course.setPreCourse(null);
         courseRepository.save(course);
     }
 
-    public void addPreCourse(String id, String preCourseId) {
+    public void setPreCourse(String id, String preCourseId) {
+        Course preCourse = courseRepository.findById(preCourseId).orElseThrow();
+        // check cycle
+        while (preCourse != null) {
+            if (preCourse.getId().equals(id)) {
+                throw new UnsupportedOperationException("Cyclic pre course");
+            }
+            preCourse = preCourse.getPreCourse();
+        }
         final Course course = courseRepository.findById(id).orElseThrow();
-        course.getPreCourses().add(courseRepository.findById(preCourseId).orElseThrow());
+        course.setPreCourse(courseRepository.findById(preCourseId).orElseThrow());
         courseRepository.save(course);
     }
+
 }

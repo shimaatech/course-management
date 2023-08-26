@@ -1,7 +1,6 @@
 package com.aiman.coursemanagement.controller;
 
 import com.aiman.coursemanagement.dto.CourseDto;
-import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,27 +42,20 @@ public class CourseController {
         return "add_course";
     }
 
-    @GetMapping("/pre-courses/{id}")
-    public String managePreCourses(@PathVariable String id, Model model) {
-        final CourseDto courseDto = courseService.getCourseById(id);
-        final List<CourseDto> courses = courseService.getAllCourses();
-        model.addAttribute("courses", courses);
-        model.addAttribute("course", courseDto);
-        return "pre-courses";
+
+    @PostMapping("/{id}/remove-pre-course")
+    @ResponseBody
+    public Boolean removePreCourse(@PathVariable String id, Model model) {
+        courseService.removePreCourse(id);
+        return Boolean.TRUE;
     }
 
 
-    @GetMapping("/pre-courses/delete/{id}")
-    public String deletePreCourse(@PathVariable String id, @RequestParam String preCourseId, Model model) {
-        courseService.deletePreCourse(id, preCourseId);
-        return "redirect:/courses/pre-courses/" + id;
-    }
-
-
-    @GetMapping("/pre-courses/add/{id}")
-    public String addPreCourse(@PathVariable String id, @RequestParam String preCourseId, Model model) {
-        courseService.addPreCourse(id, preCourseId);
-        return "redirect:/courses/pre-courses/" + id;
+    @PostMapping("/{id}/set-pre-course")
+    @ResponseBody
+    public Boolean setPreCourse(@PathVariable String id, @RequestParam String preCourseId, Model model) {
+        courseService.setPreCourse(id, preCourseId);
+        return Boolean.TRUE;
     }
 
 

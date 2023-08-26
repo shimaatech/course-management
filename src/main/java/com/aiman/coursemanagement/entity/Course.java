@@ -1,9 +1,6 @@
 package com.aiman.coursemanagement.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Lazy;
 
@@ -25,7 +22,7 @@ public class Course {
 
     private Integer hours;
 
-    @ManyToMany
-    private List<Course> preCourses;
+    @OneToOne
+    private Course preCourse;
 
 }
