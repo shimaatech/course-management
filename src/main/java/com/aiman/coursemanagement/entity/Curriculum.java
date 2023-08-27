@@ -3,10 +3,11 @@ package com.aiman.coursemanagement.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "courses")
+@Table(name = "curriculums")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,6 +16,7 @@ import java.util.List;
 public class Curriculum {
 
     @Id
+    @GeneratedValue
     private Long id;
 
     private Integer startYear;
@@ -26,6 +28,6 @@ public class Curriculum {
     private String hebrewEndYear;
 
     @OneToMany
-    private List<Semester> semesters;
+    private List<Semester> semesters = new ArrayList<>();
 
 }

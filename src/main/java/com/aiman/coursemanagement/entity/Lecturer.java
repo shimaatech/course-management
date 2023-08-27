@@ -3,6 +3,7 @@ package com.aiman.coursemanagement.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,6 @@ public class Lecturer {
 
     private String name;
 
-    @Column(name = "last_name")
     private String lastName;
 
     private String phone;
@@ -27,5 +27,5 @@ public class Lecturer {
     private String mail;
 
     @ManyToMany()
-    private List<Course> courses;
+    private List<Course> courses = new ArrayList<>();
 }

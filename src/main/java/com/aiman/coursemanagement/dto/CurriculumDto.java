@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -29,6 +30,6 @@ public class CurriculumDto {
 
     private String hebrewEndYear;
 
-    private List<SemesterDto> semesters;
+    private List<SemesterDto> semesters = new ArrayList<>();
 
 }

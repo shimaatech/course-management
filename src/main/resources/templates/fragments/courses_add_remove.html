@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="he"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+<th:block th:fragment="courses-add-remove(allCourses, selectedCourses)">
+    <!-- Add Bootstrap JS and jQuery scripts (required for Bootstrap components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        var selectedCoursesIds = [];
+
+    function onUpdate() {
+            console.log('onUpdate');
+            selectedCoursesIds = [];
+            var selectedRows = document.querySelectorAll('#selectedCoursesTable tbody tr');
+
+            selectedRows.forEach(function(row) {
+                selectedCoursesIds.push(row.dataset.courseId);
+            });
+    }
+
+     function moveCourse(courseId) {
+        var courseRow = document.querySelector('#allCoursesTable tr[data-course-id="' + courseId + '"]');
+        var selectedTable = document.getElementById('selectedCoursesTable').getElementsByTagName('tbody')[0];
+
+        if (courseRow) {
+            courseRow.remove();
+
+            var newRow = selectedTable.insertRow(selectedTable.rows.length);
+            newRow.innerHTML = courseRow.innerHTML;
+            newRow.dataset.courseId = courseId;
+            var lastCell = newRow.lastElementChild;
+            lastCell.innerHTML = '<button class="btn btn-danger btn-sm" onclick="unselectCourse(\'' + courseId + '\')">Remove</button>';
+        }
+
+        onUpdate();
+    }
+
+    function unselectCourse(courseId) {
+        var selectedRow = document.querySelector('#selectedCoursesTable tr[data-course-id="' + courseId + '"]');
+        var allCoursesTable = document.getElementById('allCoursesTable').getElementsByTagName('tbody')[0];
+
+        if (selectedRow) {
+            selectedRow.remove();
+            var newRow = allCoursesTable.insertRow(allCoursesTable.rows.length);
+            newRow.dataset.courseId = courseId;
+            newRow.innerHTML = selectedRow.innerHTML;
+            var lastCell = newRow.lastElementChild;
+            lastCell.innerHTML = '<td></td><td></td><td><button class="btn btn-primary btn-sm" onclick="moveCourse(\'' + courseId + '\')">Add</button></td>';
+        }
+        onUpdate();
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var removeButtons = document.querySelectorAll('#removeButton');
+        var addButtons = document.querySelectorAll('#addButton');
+
+        onUpdate();
+
+        removeButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var courseId = button.getAttribute('data-course-id');
+                unselectCourse(courseId);
+            });
+        });
+
+        addButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var courseId = button.getAttribute('data-course-id');
+                moveCourse(courseId);
+            });
+        });
+    });
+
+
+
+
+
+    </script>
+
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Selected Courses</h2>
+                <table id="selectedCoursesTable" class="table table-bordered">
+                    <tbody>
+                    <!-- Selected courses will be dynamically added here -->
+                    <th:block th:each="selectedCourse : ${selectedCourses}">
+                        <tr th:data-course-id="${selectedCourse.id}">
+                            <td th:text="${selectedCourse.id}"></td>
+                            <td th:text="${selectedCourse.name}"></td>
+                            <td>
+                                <button id="removeButton" class="btn btn-danger btn-sm"
+                                        th:data-course-id="${selectedCourse.id}">Remove
+                                </button>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h2>All Courses</h2>
+                <table id="allCoursesTable" class="table table-bordered">
+                    <tbody>
+                    <!-- All courses will be dynamically added here -->
+                    <th:block th:each="course : ${allCourses}">
+                        <tr th:data-course-id="${course.id}">
+                            <td th:text="${course.id}"></td>
+                            <td th:text="${course.name}"></td>
+                            <td>
+                                <button id="addButton" class="btn btn-primary btn-sm" th:data-course-id="${course.id}">
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+
+
+</html>

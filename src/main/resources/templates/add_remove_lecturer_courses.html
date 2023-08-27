@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Set Lecturer Courses</title>
+</head>
+
+<body>
+
+
+<section layout:fragment="content">
+    <div class="container p-3">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Set courses of lecturer [[${lecturer.name}]]</h2>
+                </div>
+
+                <div th:replace="fragments/courses_add_remove :: courses-add-remove(allCourses=${allCourses}, selectedCourses=${selectedCourses})"></div>
+                <a class="btn btn-primary" onclick="onDone()">Done</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function onDone() {
+            console.log(selectedCoursesIds);
+            if (selectedCoursesIds) {
+                const url = '/lecturers/' + [[${lecturer.id}]] + '/set-courses?courses=' + selectedCoursesIds.join(',');
+                let resp = await fetch(url, {
+                        method: 'POST',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    window.alert(error);
+                }
+            }
+            window.location = '/lecturers';
+        }
+
+    </script>
+
+</section>
+
+</body>
+</html>

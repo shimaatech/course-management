@@ -24,6 +24,7 @@
             <th>Last Name</th>
             <th>Phone</th>
             <th>Mail</th>
+            <th>Courses</th>
             </thead>
             <tbody>
             <tr th:each="lecturer : ${lecturers}" th:object="${lecturer}">
@@ -32,6 +33,7 @@
                 <td th:text="*{lastName}"></td>
                 <td th:text="*{phone}"></td>
                 <td th:text="*{mail}"></td>
+                <td><a class="btn btn-primary" th:href="@{/lecturers/{id}/manage-courses(id=${lecturer.id})}">Manage</a></td>
             </tr>
             </tbody>
         </table>

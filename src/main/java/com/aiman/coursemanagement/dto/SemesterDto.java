@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,6 +22,6 @@ public class SemesterDto {
 
     private String name;
 
-    private List<CourseDto> courses;
+    private List<CourseDto> courses = new ArrayList<>();
 
 }
