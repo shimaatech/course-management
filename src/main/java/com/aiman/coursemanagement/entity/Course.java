@@ -22,7 +22,7 @@ public class Course {
 
     private Integer hours;
 
-    @OneToOne
+    @ManyToOne
     private Course preCourse;
 
 }

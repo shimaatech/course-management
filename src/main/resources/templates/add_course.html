@@ -20,7 +20,7 @@
                     <h2 class="text-center">Add Course</h2>
                 </div>
                 <div class="card-body">
-                    <form role="form" method="post" th:action="@{/courses}" th:object="${course}">
+                    <form role="form" method="post" th:action="@{/courses}" th:object="${newCourse}">
                         <div class="mb-3">
                             <label class="form-label"> ID </label>
                             <input
@@ -54,6 +54,13 @@
                             />
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label"> Pre course </label>
+                            <select id="preCourse" name="preCourseId">
+                                <option value="">None</option>
+                                <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.name}"></option>
+                            </select>
+                        </div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

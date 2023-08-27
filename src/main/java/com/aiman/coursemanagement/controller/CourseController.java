@@ -3,6 +3,8 @@ package com.aiman.coursemanagement.controller;
 import com.aiman.coursemanagement.dto.CourseDto;
 import com.aiman.coursemanagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,8 @@ public class CourseController {
 
 
     @PostMapping()
-    public String createCourse(CourseDto courseDto) {
-        courseService.createCourse(courseDto);
+    public String createCourse(CourseDto courseDto, @RequestParam(name = "preCourseId", required = false) String preCourseId) {
+        courseService.createCourse(courseDto, preCourseId);
         return "redirect:/courses";
     }
 
@@ -38,24 +40,29 @@ public class CourseController {
     @GetMapping("/new")
     public String newCourseForm(Model model) {
         final CourseDto courseDto = new CourseDto();
-        model.addAttribute("course", courseDto);
+        model.addAttribute("newCourse", courseDto);
+        model.addAttribute("courses", courseService.getAllCourses());
         return "add_course";
     }
 
 
     @PostMapping("/{id}/remove-pre-course")
     @ResponseBody
-    public Boolean removePreCourse(@PathVariable String id, Model model) {
+    public ResponseEntity removePreCourse(@PathVariable String id, Model model) {
         courseService.removePreCourse(id);
-        return Boolean.TRUE;
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
     @PostMapping("/{id}/set-pre-course")
     @ResponseBody
-    public Boolean setPreCourse(@PathVariable String id, @RequestParam String preCourseId, Model model) {
-        courseService.setPreCourse(id, preCourseId);
-        return Boolean.TRUE;
+    public ResponseEntity setPreCourse(@PathVariable String id, @RequestParam String preCourseId, Model model) {
+        try {
+            courseService.setPreCourse(id, preCourseId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 

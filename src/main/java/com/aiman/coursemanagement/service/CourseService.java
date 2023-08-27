@@ -4,6 +4,8 @@ import com.aiman.coursemanagement.dto.CourseDto;
 import com.aiman.coursemanagement.entity.Course;
 import com.aiman.coursemanagement.mapper.CourseMapper;
 import com.aiman.coursemanagement.repository.CourseRepository;
+import io.micrometer.common.util.StringUtils;
+import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,12 @@ public class CourseService {
         return courseRepository.findAll().stream().map(CourseMapper::mapToCourseDto).toList();
     }
 
-    public void createCourse(CourseDto courseDto) {
+    public void createCourse(CourseDto courseDto, String preCourseId) {
         final Course course = CourseMapper.mapToCourse(courseDto);
+        if (!StringUtils.isBlank(preCourseId)) {
+            final Course preCourse = courseRepository.findById(preCourseId).orElseThrow();
+            course.setPreCourse(preCourse);
+        }
         courseRepository.save(course);
     }
 
@@ -39,17 +45,20 @@ public class CourseService {
     }
 
     public void setPreCourse(String id, String preCourseId) {
-        Course preCourse = courseRepository.findById(preCourseId).orElseThrow();
-        // check cycle
-        while (preCourse != null) {
-            if (preCourse.getId().equals(id)) {
-                throw new UnsupportedOperationException("Cyclic pre course");
-            }
-            preCourse = preCourse.getPreCourse();
-        }
+        checkPreCourseCycle(id, preCourseId);
         final Course course = courseRepository.findById(id).orElseThrow();
         course.setPreCourse(courseRepository.findById(preCourseId).orElseThrow());
         courseRepository.save(course);
+    }
+
+    private void checkPreCourseCycle(String courseId, String preCourseId) {
+        Course preCourse = courseRepository.findById(preCourseId).orElseThrow();
+        while (preCourse != null) {
+            if (preCourse.getId().equals(courseId)) {
+                throw new RuntimeException("Cyclic pre course");
+            }
+            preCourse = preCourse.getPreCourse();
+        }
     }
 
 }

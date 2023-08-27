@@ -48,8 +48,19 @@
         fetch('/courses/' + courseId + '/remove-pre-course', {method: 'POST'});
     }
 
-    function setPreCourse(courseId, preCourseId) {
-        fetch('/courses/' + courseId + '/set-pre-course?preCourseId=' + preCourseId, {method: 'POST'});
+    async function setPreCourse(courseId, preCourseId) {
+        try {
+            let resp = await fetch('/courses/' + courseId + '/set-pre-course?preCourseId=' + preCourseId, {method: 'POST'});
+            if (!resp.ok) {
+                console.log(resp);
+                let error = await resp.text();
+                console.log(error);
+                window.alert('Cyclic pre course');
+                window.location = '/courses';
+            }
+        } catch(error) {
+            console.log(error);
+        }
     }
 
     function onPreCourseSelected(selector) {
