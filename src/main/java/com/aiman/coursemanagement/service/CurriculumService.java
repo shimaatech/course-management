@@ -29,4 +29,11 @@ public class CurriculumService {
         curriculumRepository.save(curriculum);
     }
 
+    public List<CurriculumDto> getAllCurriculums() {
+        return curriculumRepository.findAll().stream().map(CurriculumMapper::mapToCurriculumDto).toList();
+    }
+
+    public CurriculumDto getCurriculumById(Long id) {
+        return CurriculumMapper.mapToCurriculumDto(curriculumRepository.findById(id).orElseThrow());
+    }
 }

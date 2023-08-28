@@ -14,7 +14,7 @@ public class SemesterMapper {
         return Semester.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .courses(dto.getCourses().stream().map(CourseMapper::mapToCourse).toList())
+                .courses(dto.getCourses().stream().map(CurriculumCourseMapper::mapToCourse).toList())
                 .build();
     }
 
@@ -26,7 +26,7 @@ public class SemesterMapper {
         return SemesterDto.builder()
                 .id(semester.getId())
                 .name(semester.getName())
-                .courses(semester.getCourses().stream().map(CourseMapper::mapToCourseDto).toList())
+                .courses(semester.getCourses().stream().map(CurriculumCourseMapper::mapToCourseDto).toList())
                 .build();
     }
 

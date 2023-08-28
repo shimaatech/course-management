@@ -22,6 +22,6 @@ public class SemesterDto {
 
     private String name;
 
-    private List<CourseDto> courses = new ArrayList<>();
+    private List<CurriculumCourseDto> courses = new ArrayList<>();
 
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Curriculums</title>
+
+</head>
+
+<body>
+
+<section layout:fragment="content">
+
+    <div class="container p-3">
+        <div class="row">
+            <h2>Curriculums</h2>
+        </div>
+
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+            <th>ID</th>
+            <th>Start Year</th>
+            <th>End Year</th>
+            <th>Hebrew Start Year</th>
+            <th>Hebrew End Year</th>
+            <th>Semesters</th>
+            </thead>
+            <tbody>
+            <tr th:each="curriculum : ${curriculums}" th:object="${curriculum}">
+                <td th:text="*{id}"></td>
+                <td th:text="*{startYear}"></td>
+                <td th:text="*{endYear}"></td>
+                <td th:text="*{hebrewStartYear}"></td>
+                <td th:text="*{hebrewEndYear}"></td>
+                <td><a class="btn btn-primary" th:href="@{/curriculums/{id}/manage-semesters(id=${curriculum.id})}">Manage</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div>
+            <a class="btn btn-primary" href="/curriculums/new">Create New Curriculum</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
