@@ -7,6 +7,17 @@
     <meta charset="UTF-8">
     <title>Curriculum Semesters Management</title>
 
+
+    <script th:inline="javascript">
+    async function openAddSemesterModal() {
+        var resp = await fetch('/semesters/new?curriculumId=' + [[${curriculum.id}]]);
+        var data = await resp.text();
+        $('#myModal .modal-content').html(data);
+        // Show the modal
+        $('#myModal').modal('show');
+    }
+    </script>
+
 </head>
 
 <body>
@@ -46,7 +57,17 @@
             <div th:fragment=":: semester-table(semester=${semester})"></div>
         </th:block>
 
-        <a class="btn btn-primary" href="/semesters/new">Add Semester</a>
+        <a class="btn btn-primary" onclick="openAddSemesterModal()">Add Semester</a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <!-- Content will be populated dynamically using AJAX -->
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </section>
