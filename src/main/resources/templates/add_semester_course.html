@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/modal-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Course</title>
+
+    <script>
+        async function onCourseSelected() {
+              var selectedCourseId = document.getElementById("courseSelect").value;
+              var semesterId = [[${semester.id}]];
+              var curriculumId = [[${curriculumId}]];
+              console.log(selectedCourseId);
+              console.log(semesterId);
+              var resp = await fetch('/semesters/' + semesterId + '/add-course?courseId=' + selectedCourseId + '&curriculumId=' + curriculumId);
+              var data = await resp.text();
+              $('#myModal .modal-content').html(data);
+        }
+    </script>
+
+</head>
+
+<body>
+
+
+<section layout:fragment="content">
+    <!-- dialog-template.html -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add Semester Course</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div th:replace=":: add-course"></div>
+        </div>
+    </div>
+</section>
+
+<div th:fragment="add-course">
+
+    <div class="container p-3">
+        <div class="row col-md-8 offset-md-2">
+            <form role="form" method="post" th:action="@{/semesters/{id}/add-course(id=${semester.id})}" th:object="${newSemester}">
+                <div class="mb-3">
+                    <label class="form-label"> Course </label>
+                    <select id="courseSelect" name="courseId" onchange="onCourseSelected()">
+                        <option th:selected="${selectedCourse == null}" th:value="${null}">Select Course</option>
+                        <option th:each="course : ${courses}"
+                                th:value="${course.id}"
+                                th:text="${course.name}"
+                                th:selected="${selectedCourse != null && #strings.equals(course.id, selectedCourse.id)}"
+                        ></option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"> Course </label>
+                    <select id="lecturerSelect" name="lecturerId">
+                        <option th:each="lecturer : ${lecturers}"
+                                th:value="${lecturer.id}"
+                                th:text="${lecturer.name}"></option>
+                    </select>
+                </div>
+
+                <input
+                        type="hidden"
+                        class="form-control"
+                        id="curriculumId"
+                        name="curriculumId"
+                        th:value="${curriculumId}"
+                />
+
+                <button type="submit" class="btn btn-primary" >Submit</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

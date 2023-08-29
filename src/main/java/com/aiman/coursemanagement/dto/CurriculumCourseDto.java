@@ -14,7 +14,7 @@ public class CurriculumCourseDto {
 
     @Id
     @GeneratedValue
-    private String id;
+    private Long id;
 
     @ManyToOne
     private CourseDto course;

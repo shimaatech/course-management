@@ -1,11 +1,9 @@
 package com.aiman.coursemanagement.service;
 
 import com.aiman.coursemanagement.dto.SemesterDto;
-import com.aiman.coursemanagement.entity.Curriculum;
-import com.aiman.coursemanagement.entity.Semester;
+import com.aiman.coursemanagement.entity.*;
 import com.aiman.coursemanagement.mapper.SemesterMapper;
-import com.aiman.coursemanagement.repository.CurriculumRepository;
-import com.aiman.coursemanagement.repository.SemesterRepository;
+import com.aiman.coursemanagement.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +14,20 @@ import java.util.List;
 public class SemesterService {
 
     private final SemesterRepository semesterRepository;
+    private final CourseRepository courseRepository;
+    private final LecturerRepository lecturerRepository;
 
     private final CurriculumRepository curriculumRepository;
 
+    private final CurriculumCourseRepository curriculumCourseRepository;
+
     @Autowired
-    public SemesterService(SemesterRepository semesterRepository, CurriculumRepository curriculumRepository) {
+    public SemesterService(SemesterRepository semesterRepository, CourseRepository courseRepository, LecturerRepository lecturerRepository, CurriculumRepository curriculumRepository, CurriculumCourseRepository curriculumCourseRepository) {
         this.semesterRepository = semesterRepository;
+        this.courseRepository = courseRepository;
+        this.lecturerRepository = lecturerRepository;
         this.curriculumRepository = curriculumRepository;
+        this.curriculumCourseRepository = curriculumCourseRepository;
     }
 
 
@@ -34,5 +39,23 @@ public class SemesterService {
         curriculumSemesters.add(semester);
         curriculum.setSemesters(curriculumSemesters);
         curriculumRepository.save(curriculum);
+    }
+
+    public void addCourse(Long semesterId, String courseId, String lecturerId) {
+        final Semester semester = semesterRepository.findById(semesterId).orElseThrow();
+        final Course course = courseRepository.findById(courseId).orElseThrow();
+        final Lecturer lecturer = lecturerRepository.findById(lecturerId).orElseThrow();
+        final List<CurriculumCourse> courses = new ArrayList<>(semester.getCourses());
+        final CurriculumCourse curriculumCourse = new CurriculumCourse();
+        curriculumCourse.setCourse(course);
+        curriculumCourse.setLecturer(lecturer);
+        curriculumCourseRepository.save(curriculumCourse);
+        courses.add(curriculumCourse);
+        semester.setCourses(courses);
+        semesterRepository.save(semester);
+    }
+
+    public SemesterDto getSemesterById(Long id) {
+        return SemesterMapper.mapToSemesterDto(semesterRepository.findById(id).orElseThrow());
     }
 }

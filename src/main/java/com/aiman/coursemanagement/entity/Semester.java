@@ -21,7 +21,7 @@ public class Semester {
 
     private String name;
 
-    @OneToMany
+    @OneToMany()
     private List<CurriculumCourse> courses = new ArrayList<>();
 
 }

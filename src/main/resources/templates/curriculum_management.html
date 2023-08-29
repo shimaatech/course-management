@@ -16,6 +16,19 @@
         // Show the modal
         $('#myModal').modal('show');
     }
+
+    async function openAddCourseModal(semesterId) {
+        console.log(semesterId);
+        var curriculumId = [[${curriculum.id}]];
+        var resp = await fetch('/semesters/' + semesterId + '/add-course?curriculumId=' + curriculumId );
+        var data = await resp.text();
+        $('#myModal .modal-content').html(data);
+        // Show the modal
+        $('#myModal').modal('show');
+    }
+
+
+
     </script>
 
 </head>
@@ -50,17 +63,22 @@
         </table>
 
         <br>
-        <h3 class="mb-3">Semesters</h3>
-        <br>
-
-        <th:block th:each="semester : ${semesters}">
-            <div th:fragment=":: semester-table(semester=${semester})"></div>
-        </th:block>
 
         <a class="btn btn-primary" onclick="openAddSemesterModal()">Add Semester</a>
 
+        <br>
+
+        <h2 class="mt-5">Semesters</h2>
+
+
+        <th:block th:each="semester : ${semesters}">
+            <div class="mt-5" th:insert=":: semester-table(semester=${semester})"></div>
+        </th:block>
+
+
         <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- Content will be populated dynamically using AJAX -->
@@ -74,7 +92,7 @@
 
 
 <div th:fragment="semester-table(semester)">
-    <h5 th:text="${semester.name}"></h5>
+    <h4 th:text="${semester.name}"></h4>
     <th:block th:with="curriculumCourse=${semester.courses}">
         <table class="table table-striped table-hover table-bordered">
             <thead class="table-dark">
@@ -99,8 +117,8 @@
         </table>
     </th:block>
 
-    <div>
-        <a class="btn btn-primary" id="addCourseButton" th:data-semester-id="${semester.id}">Add Course</a>
+    <div class="mt-2">
+        <a class="btn btn-primary" id="addCourseButton" th:data-semester-id="${semester.id}" th:onclick="|openAddCourseModal(${semester.id})|">Add Course</a>
     </div>
 </div>
 

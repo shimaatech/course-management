@@ -1,8 +1,12 @@
 package com.aiman.coursemanagement.controller;
 
 import com.aiman.coursemanagement.dto.CourseDto;
+import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.dto.SemesterDto;
+import com.aiman.coursemanagement.entity.Lecturer;
+import com.aiman.coursemanagement.entity.Semester;
 import com.aiman.coursemanagement.service.CourseService;
+import com.aiman.coursemanagement.service.LecturerService;
 import com.aiman.coursemanagement.service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +22,14 @@ import java.util.List;
 public class SemesterController {
 
     private final SemesterService semesterService;
+    private final CourseService courseService;
+    private final LecturerService lecturerService;
 
     @Autowired
-    public SemesterController(SemesterService semesterService) {
+    public SemesterController(SemesterService semesterService, CourseService courseService, LecturerService lecturerService) {
         this.semesterService = semesterService;
+        this.courseService = courseService;
+        this.lecturerService = lecturerService;
     }
 
 
@@ -37,6 +45,45 @@ public class SemesterController {
     @PostMapping()
     public String createSemester(SemesterDto semesterDto, @RequestParam(name = "curriculumId", required = true) Long curriculumId) {
         semesterService.createSemester(semesterDto, curriculumId);
+        return "redirect:/curriculums/" + curriculumId + "/manage-semesters";
+    }
+
+
+    @GetMapping("/{id}/add-course")
+    public String addCourse(
+            @PathVariable("id") Long semesterId,
+            @RequestParam("curriculumId") Long curriculumId,
+            @RequestParam(value = "courseId", required = false) String courseId, Model model) {
+
+        final SemesterDto semester = semesterService.getSemesterById(semesterId);
+        final List<CourseDto> courses = courseService.getAllCourses();
+
+        model.addAttribute("semester", semester);
+        model.addAttribute("courses", courses);
+        model.addAttribute("curriculumId", curriculumId);
+
+
+        if (courseId != null) {
+            final CourseDto selectedCourse = courseService.getCourseById(courseId);
+            final List<LecturerDto> courseLecturers = lecturerService.getCourseLecturers(courseId);
+
+            model.addAttribute("selectedCourse", selectedCourse);
+            model.addAttribute("lecturers", courseLecturers);
+
+        }
+
+        return "add_semester_course";
+    }
+
+    @PostMapping("/{id}/add-course")
+    public String addCourse(
+            @PathVariable("id") Long semesterId,
+            @RequestParam("courseId") String courseId,
+            @RequestParam("lecturerId") String lecturerId,
+            @RequestParam("curriculumId") String curriculumId
+            ) {
+
+        semesterService.addCourse(semesterId, courseId, lecturerId);
         return "redirect:/curriculums/" + curriculumId + "/manage-semesters";
     }
 

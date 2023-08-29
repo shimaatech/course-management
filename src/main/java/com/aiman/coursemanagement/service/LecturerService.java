@@ -48,4 +48,8 @@ public class LecturerService {
         final List<Course> courses = courseRepository.findAllById(coursesIds);
         lecturer.setCourses(courses);
     }
+
+    public List<LecturerDto> getCourseLecturers(String courseId) {
+        return lecturerRepository.getLecturersByCourseId(courseId).stream().map(LecturerMapper::mapToLecturerDto).toList();
+    }
 }

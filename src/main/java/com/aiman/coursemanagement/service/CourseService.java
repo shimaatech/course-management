@@ -1,7 +1,9 @@
 package com.aiman.coursemanagement.service;
 
 import com.aiman.coursemanagement.dto.CourseDto;
+import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.entity.Course;
+import com.aiman.coursemanagement.entity.Lecturer;
 import com.aiman.coursemanagement.mapper.CourseMapper;
 import com.aiman.coursemanagement.repository.CourseRepository;
 import io.micrometer.common.util.StringUtils;
