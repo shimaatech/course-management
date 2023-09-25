@@ -4,6 +4,7 @@ import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.entity.Course;
 import com.aiman.coursemanagement.entity.Lecturer;
 import com.aiman.coursemanagement.mapper.LecturerMapper;
+import com.aiman.coursemanagement.model.Role;
 import com.aiman.coursemanagement.repository.CourseRepository;
 import com.aiman.coursemanagement.repository.LecturerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,16 @@ import java.util.List;
 
 @Service
 public class LecturerService {
-
     private final LecturerRepository lecturerRepository;
     private final CourseRepository courseRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public LecturerService(LecturerRepository lecturerRepository, CourseRepository courseRepository) {
+    public LecturerService(LecturerRepository lecturerRepository, CourseRepository courseRepository, UserService userService) {
         this.lecturerRepository = lecturerRepository;
         this.courseRepository = courseRepository;
+        this.userService = userService;
     }
 
     public List<LecturerDto> getAllLecturers() {
@@ -31,6 +34,7 @@ public class LecturerService {
         final Lecturer lecturer = LecturerMapper.mapToLecturer(lecturerDto);
         setCourses(lecturer, coursesIds);
         lecturerRepository.save(lecturer);
+        userService.createUser(lecturerDto.getId(), lecturerDto.getPassword(), Role.Lecturer);
     }
 
     public LecturerDto getLecturerById(String lecturerId) {

@@ -28,6 +28,8 @@ public class LecturerDto {
 
     private String mail;
 
+    private String password;
+
     private List<Course> courses = new ArrayList<>();
 
 }

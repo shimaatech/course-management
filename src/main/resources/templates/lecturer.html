@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Course Management</title>
+<body>
+
+<section layout:fragment="content">
+    <div class="container p-4">
+        <h3>Welcome [[${lecturer.name}]]</h3>
+        <div class="mt-5">
+            <a class="btn btn-primary" href="/lecturer/courses">My Courses</a>
+            <a class="btn btn-primary" href="/lecturer/curriculums">Curriculums</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

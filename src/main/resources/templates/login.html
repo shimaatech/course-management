@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/non-auth-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+<body>
+
+<section layout:fragment="content">
+
+    <div class="container">
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Login</h2>
+                    <div class="card-body">
+                        <form method="post" th:action="@{/login}" class="form-horizontal" role="form">
+                            <div class="form-group mb-3">
+                                <label class="control-label">ID</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    class="form-control"
+                                    placeholder="Enter User ID"
+                                >
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="control-label">Password</label>
+                                <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        class="form-control"
+                                        placeholder="Enter Password"
+                                >
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

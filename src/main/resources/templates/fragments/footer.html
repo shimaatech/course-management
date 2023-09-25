@@ -11,7 +11,8 @@
 
     <footer th:fragment="footer" class="mt-5 p-3">
         <hr>
-        <a class="btn btn-dark" href="/">Home Page</a>
+        <a th:if="${@webUtils.isAdmin()}" class="btn btn-dark" href="/admin">Home Page</a>
+        <a th:if="${@webUtils.isLecturer()}" class="btn btn-dark" href="/lecturer">Home Page</a>
     </footer>
 
 </body>

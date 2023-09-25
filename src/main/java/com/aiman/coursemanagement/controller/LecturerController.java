@@ -4,6 +4,7 @@ import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.entity.Course;
 import com.aiman.coursemanagement.service.CourseService;
 import com.aiman.coursemanagement.service.LecturerService;
+import com.aiman.coursemanagement.utils.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +44,7 @@ public class LecturerController {
     @GetMapping("/new")
     public String newLecturerForm(Model model) {
         final LecturerDto lecturerDto = new LecturerDto();
+        lecturerDto.setPassword(GeneralUtils.generateRandomPassword(10));
         model.addAttribute("lecturer", lecturerDto);
         model.addAttribute("allCourses", courseService.getAllCourses());
         model.addAttribute("selectedCourses", Collections.emptyList());
