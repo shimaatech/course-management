@@ -31,7 +31,7 @@
             if (selectedCoursesIds) {
                 const url = '/lecturers/' + [[${lecturer.id}]] + '/set-courses?courses=' + selectedCoursesIds.join(',');
                 let resp = await fetch(url, {
-                        method: 'POST',
+                        method: 'POST'
                     });
                 if (!resp.ok) {
                     error = await resp.text();

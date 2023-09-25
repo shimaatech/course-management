@@ -5,31 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Curriculum Semesters Management</title>
-
-
-    <script th:inline="javascript">
-    async function openAddSemesterModal() {
-        var resp = await fetch('/semesters/new?curriculumId=' + [[${curriculum.id}]]);
-        var data = await resp.text();
-        $('#myModal .modal-content').html(data);
-        // Show the modal
-        $('#myModal').modal('show');
-    }
-
-    async function openAddCourseModal(semesterId) {
-        console.log(semesterId);
-        var curriculumId = [[${curriculum.id}]];
-        var resp = await fetch('/semesters/' + semesterId + '/add-course?curriculumId=' + curriculumId );
-        var data = await resp.text();
-        $('#myModal .modal-content').html(data);
-        // Show the modal
-        $('#myModal').modal('show');
-    }
-
-
-
-    </script>
+    <title>Curriculum Semesters</title>
 
 </head>
 
@@ -39,7 +15,7 @@
 
     <div class="container p-3" th:with="semesters=${curriculum.semesters}">
         <div class="row">
-            <h2>Curriculum Semesters Management</h2>
+            <h2>Curriculum Semesters</h2>
         </div>
 
         <table class="table table-striped table-hover table-bordered">
@@ -64,8 +40,6 @@
 
         <br>
 
-        <a class="btn btn-primary" onclick="openAddSemesterModal()">Add Semester</a>
-
         <br>
 
         <h2 class="mt-5">Semesters</h2>
@@ -74,17 +48,6 @@
         <th:block th:each="semester : ${semesters}">
             <div class="mt-5" th:insert=":: semester-table(semester=${semester})"></div>
         </th:block>
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <!-- Content will be populated dynamically using AJAX -->
-                </div>
-            </div>
-        </div>
 
     </div>
 
@@ -103,7 +66,7 @@
             <th>Learning Hours</th>
             </thead>
             <tbody>
-            <tr th:each="curriculumCourse : ${curriculumCourse}" th:object="${curriculumCourse}">
+            <tr th:each="curriculumCourse : ${curriculumCourse}" th:object="${curriculumCourse}" th:class="${@webUtils.isUserId(curriculumCourse.lecturer.id)? 'bg-warning': ''}">
                 <th:block th:with="course=${curriculumCourse.course}, lecturer=${curriculumCourse.lecturer}">
                     <td th:text="${course.id}"></td>
                     <td th:text="${course.name}"></td>
@@ -116,10 +79,6 @@
             </tbody>
         </table>
     </th:block>
-
-    <div class="mt-2">
-        <a class="btn btn-primary" id="addCourseButton" th:data-semester-id="${semester.id}" th:onclick="|openAddCourseModal(${semester.id})|">Add Course</a>
-    </div>
 </div>
 
 

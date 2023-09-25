@@ -3,6 +3,7 @@ package com.aiman.coursemanagement.service;
 import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.entity.Course;
 import com.aiman.coursemanagement.entity.Lecturer;
+import com.aiman.coursemanagement.entity.User;
 import com.aiman.coursemanagement.mapper.LecturerMapper;
 import com.aiman.coursemanagement.model.Role;
 import com.aiman.coursemanagement.repository.CourseRepository;
@@ -55,5 +56,9 @@ public class LecturerService {
 
     public List<LecturerDto> getCourseLecturers(String courseId) {
         return lecturerRepository.getLecturersByCourseId(courseId).stream().map(LecturerMapper::mapToLecturerDto).toList();
+    }
+
+    public void updateLecturerPassword(String lecturerId, String password) {
+        userService.updateUserPassword(lecturerId, password);
     }
 }

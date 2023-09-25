@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Courses</title>
+
+</head>
+
+<body>
+
+<section layout:fragment="content">
+
+    <div class="container p-3">
+        <div class="row">
+            <h2>My Courses</h2>
+        </div>
+
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+            <th>ID</th>
+            <th>Name</th>
+            <th>Hours</th>
+            <th>Pre Course</th>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${courses}" th:object="${course}">
+                <td th:text="*{id}"></td>
+                <td th:text="*{name}"></td>
+                <td th:text="*{hours}"></td>
+                <td th:with="hasPreCourse=${course.preCourse != null}">
+                    <div th:if="${hasPreCourse}" th:text="${course.preCourse.name}"></div>
+                    <div th:unless="${hasPreCourse}" th:text="None"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+</body>
+</html>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="he"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 
 <head>
@@ -12,8 +11,9 @@
 <body>
 
 <header th:fragment="header" class="p-3 text-center">
-    <div class="w-100 d-flex justify-content-right">
-        <a th:href="@{/logout}">Logout</a>
+    <div th:if="${@webUtils.isAuthenticated()}" class="w-100 d-flex justify-content-right">
+        <span class="p-2">Logged in as <b>[[${@webUtils.getUserId()}]]</b></span>
+        <a class="p-2" th:href="@{/logout}">Logout</a>
     </div>
     <h1 class="mt-5">Course Management</h1>
 </header>

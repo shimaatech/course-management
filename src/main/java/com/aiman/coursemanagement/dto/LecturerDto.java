@@ -30,6 +30,6 @@ public class LecturerDto {
 
     private String password;
 
-    private List<Course> courses = new ArrayList<>();
+    private List<CourseDto> courses = new ArrayList<>();
 
 }

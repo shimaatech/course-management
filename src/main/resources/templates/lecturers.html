@@ -6,6 +6,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Lecturers</title>
+
+    <script>
+      async function generateNewPassword(lecturerId) {
+            const url = '/lecturers/' + lecturerId + '/new-password';
+            let resp = await fetch(url, {
+                        method: 'POST',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    window.alert(error);
+                }
+            password = await resp.text();
+            window.alert(password);
+        }
+
+    </script>
+
 </head>
 
 <body>
@@ -24,6 +41,7 @@
             <th>Last Name</th>
             <th>Phone</th>
             <th>Mail</th>
+            <th>Password</th>
             <th>Courses</th>
             </thead>
             <tbody>
@@ -33,6 +51,7 @@
                 <td th:text="*{lastName}"></td>
                 <td th:text="*{phone}"></td>
                 <td th:text="*{mail}"></td>
+                <td><a class="btn btn-primary text-nowrap" th:attr="onclick='generateNewPassword(\'' + ${lecturer.id} + '\')'">New Password</a></td>
                 <td><a class="btn btn-primary" th:href="@{/lecturers/{id}/manage-courses(id=${lecturer.id})}">Manage</a></td>
             </tr>
             </tbody>

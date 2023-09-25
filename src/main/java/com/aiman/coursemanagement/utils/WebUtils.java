@@ -19,6 +19,18 @@ public class WebUtils {
         return authentication.getAuthorities().contains(Role.Lecturer);
     }
 
+    public boolean isAuthenticated() {
+        return getAuthentication().isAuthenticated() && !getAuthentication().getName().equals("anonymousUser");
+    }
+
+    public String getUserId() {
+        return getAuthentication().getName();
+    }
+
+    public boolean isUserId(String id) {
+        return getAuthentication().getName().equals(id);
+    }
+
     private static Authentication getAuthentication() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication;

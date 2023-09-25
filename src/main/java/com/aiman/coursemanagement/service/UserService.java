@@ -26,8 +26,12 @@ public class UserService {
     }
 
     public User createUser(String id, String password, Role role) {
-        User user = new User(id, passwordEncoder.encode(password), List.of(role));
+        User user = new User(id, encodePassword(password), List.of(role));
         return userRepository.save(user);
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     public void configuraAdminUserIfNeeded() {
@@ -38,5 +42,11 @@ public class UserService {
 
     public User getById(String id) {
         return userRepository.findById(id).orElseThrow();
+    }
+
+    public void updateUserPassword(String id, String password) {
+        User user = getById(id);
+        user.setPassword(encodePassword(password));
+        userRepository.save(user);
     }
 }
