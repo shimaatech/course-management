@@ -28,6 +28,37 @@
     }
 
 
+          async function deleteSemester(semesterId) {
+            const url = '/semesters/' + semesterId;
+            let resp = await fetch(url, {
+                        method: 'DELETE',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    console.error(error);
+                    window.alert("Cannot delete semester");
+                } else {
+                    window.location = window.location;
+                }
+          }
+
+
+
+          async function deleteSemesterCourse(semesterId, courseId) {
+            const url = '/semesters/' + semesterId + '/delete-course?courseId=' + courseId;
+            let resp = await fetch(url, {
+                        method: 'DELETE',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    console.error(error);
+                    window.alert("Cannot delete course");
+                } else {
+                    window.location = window.location;
+                }
+          }
+
+
 
     </script>
 
@@ -92,15 +123,22 @@
 
 
 <div th:fragment="semester-table(semester)">
-    <h4 th:text="${semester.name}"></h4>
+    <h4 class="d-inline" th:text="${semester.name}"></h4>
+    <div class="p-2 d-inline">
+        <a class="btn btn-outline-success" th:href="@{/semesters/{id}/edit(id=${semester.id})}"><i
+                class="bi bi-pen"></i></a>
+        <a class="btn btn-outline-danger" th:attr="onclick='deleteSemester(\'' + ${semester.id} + '\')'"><i
+                class="bi bi-trash"></i></a>
+    </div>
     <th:block th:with="curriculumCourse=${semester.courses}">
-        <table class="table table-striped table-hover table-bordered">
+        <table class="mt-2 table table-striped table-hover table-bordered">
             <thead class="table-dark">
             <th>Course ID</th>
             <th>Course Name</th>
             <th>Lecturer Name</th>
             <th>Pre Course</th>
             <th>Learning Hours</th>
+            <th></th>
             </thead>
             <tbody>
             <tr th:each="curriculumCourse : ${curriculumCourse}" th:object="${curriculumCourse}">
@@ -111,6 +149,9 @@
                     <td th:if="${course.preCourse != null}" th:text="${course.preCourse.name}"></td>
                     <td th:unless="${course.preCourse != null}"></td>
                     <td th:text="${course.hours}"></td>
+                    <td><a class="btn btn-outline-danger"
+                           th:attr="onclick='deleteSemesterCourse(\'' + ${semester.id} + '\',\'' + ${course.id} + '\')'"><i
+                            class="bi bi-trash"></i></a></td>
                 </th:block>
             </tr>
             </tbody>
@@ -118,7 +159,8 @@
     </th:block>
 
     <div class="mt-2">
-        <a class="btn btn-primary" id="addCourseButton" th:data-semester-id="${semester.id}" th:onclick="|openAddCourseModal(${semester.id})|">Add Course</a>
+        <a class="btn btn-primary" id="addCourseButton" th:data-semester-id="${semester.id}"
+           th:onclick="|openAddCourseModal(${semester.id})|">Add Course</a>
     </div>
 </div>
 

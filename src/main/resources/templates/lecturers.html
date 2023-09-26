@@ -21,6 +21,19 @@
             window.alert(password);
         }
 
+      async function deleteLecturer(lecturerId) {
+            const url = '/lecturers/' + lecturerId;
+            let resp = await fetch(url, {
+                        method: 'DELETE',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    console.error(error);
+                    window.alert('Cannot delete lecturer because they teach in some curriculum');
+                }
+            window.location = '/lecturers';
+      }
+
     </script>
 
 </head>
@@ -53,6 +66,8 @@
                 <td th:text="*{mail}"></td>
                 <td><a class="btn btn-primary text-nowrap" th:attr="onclick='generateNewPassword(\'' + ${lecturer.id} + '\')'">New Password</a></td>
                 <td><a class="btn btn-primary" th:href="@{/lecturers/{id}/manage-courses(id=${lecturer.id})}">Manage</a></td>
+                <td><a class="btn btn-outline-success" th:href="@{/lecturers/{id}/edit(id=${lecturer.id})}"><i class="bi bi-pen"></i></a></td>
+                <td><a class="btn btn-outline-danger" th:attr="onclick='deleteLecturer(\'' + ${lecturer.id} + '\')'"><i class="bi bi-trash"></i></a></td>
             </tr>
             </tbody>
         </table>

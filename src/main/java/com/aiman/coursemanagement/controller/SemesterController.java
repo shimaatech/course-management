@@ -88,4 +88,17 @@ public class SemesterController {
     }
 
 
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteSemester(@PathVariable("id") Long semester) {
+        semesterService.deleteSemester(semester);
+    }
+
+
+    @DeleteMapping("/{id}/delete-course")
+    @ResponseBody
+    public void deleteSemesterCourse(@PathVariable("id") Long semesterId, @RequestParam("courseId") String courseId) {
+        semesterService.deleteCourse(semesterId, courseId);
+    }
+
 }

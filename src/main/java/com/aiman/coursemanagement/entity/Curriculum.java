@@ -27,7 +27,7 @@ public class Curriculum {
 
     private String hebrewEndYear;
 
-    @OneToMany
+    @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL)
     private List<Semester> semesters = new ArrayList<>();
 
 }

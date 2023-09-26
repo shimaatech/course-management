@@ -63,4 +63,7 @@ public class CourseService {
         }
     }
 
+    public void deleteCourse(String courseId) {
+        courseRepository.deleteById(courseId);
+    }
 }

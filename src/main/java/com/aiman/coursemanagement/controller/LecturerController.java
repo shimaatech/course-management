@@ -82,4 +82,10 @@ public class LecturerController {
         return password;
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteLecturer(@PathVariable("id") String lecturerId) {
+        lecturerService.deleteLecturer(lecturerId);
+    }
+
 }

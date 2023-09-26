@@ -61,4 +61,8 @@ public class LecturerService {
     public void updateLecturerPassword(String lecturerId, String password) {
         userService.updateUserPassword(lecturerId, password);
     }
+
+    public void deleteLecturer(String lecturerId) {
+        lecturerRepository.deleteById(lecturerId);
+    }
 }

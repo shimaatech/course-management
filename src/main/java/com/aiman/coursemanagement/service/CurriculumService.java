@@ -36,4 +36,8 @@ public class CurriculumService {
     public CurriculumDto getCurriculumById(Long id) {
         return CurriculumMapper.mapToCurriculumDto(curriculumRepository.findById(id).orElseThrow());
     }
+
+    public void deleteCurriculum(Long curriculumId) {
+        curriculumRepository.deleteById(curriculumId);
+    }
 }

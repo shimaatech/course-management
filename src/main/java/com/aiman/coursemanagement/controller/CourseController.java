@@ -66,4 +66,10 @@ public class CourseController {
     }
 
 
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteLecturer(@PathVariable("id") String courseId) {
+        courseService.deleteCourse(courseId);
+    }
+
 }

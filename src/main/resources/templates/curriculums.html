@@ -7,6 +7,21 @@
     <meta charset="UTF-8">
     <title>Curriculums</title>
 
+    <script>
+          async function deleteCurriculum(curriculumId) {
+            const url = '/curriculums/' + curriculumId;
+            let resp = await fetch(url, {
+                        method: 'DELETE',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    console.error(error);
+                    window.alert('Cannot delete curriculum');
+                }
+            window.location = '/curriculums';
+      }
+</script>
+
 </head>
 
 <body>
@@ -34,8 +49,9 @@
                 <td th:text="*{endYear}"></td>
                 <td th:text="*{hebrewStartYear}"></td>
                 <td th:text="*{hebrewEndYear}"></td>
-                <td><a class="btn btn-primary" th:href="@{/curriculums/{id}/manage-semesters(id=${curriculum.id})}">Manage</a>
-                </td>
+                <td><a class="btn btn-primary" th:href="@{/curriculums/{id}/manage-semesters(id=${curriculum.id})}">Manage</a></td>
+                <td><a class="btn btn-outline-success" th:href="@{/curriculums/{id}/edit(id=${curriculum.id})}"><i class="bi bi-pen"></i></a></td>
+                <td><a class="btn btn-outline-danger" th:attr="onclick='deleteCurriculum(\'' + ${curriculum.id} + '\')'"><i class="bi bi-trash"></i></a></td>
             </tr>
             </tbody>
         </table>

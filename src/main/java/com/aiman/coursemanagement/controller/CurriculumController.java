@@ -55,4 +55,10 @@ public class CurriculumController {
     }
 
 
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteCurriculum(@PathVariable("id") Long curriculumId) {
+        curriculumService.deleteCurriculum(curriculumId);
+    }
+
 }

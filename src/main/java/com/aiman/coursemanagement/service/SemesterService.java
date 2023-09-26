@@ -33,12 +33,12 @@ public class SemesterService {
 
     public void createSemester(SemesterDto semesterDto, Long curriculumId) {
         final Semester semester = SemesterMapper.mapToSemester(semesterDto);
-        semesterRepository.save(semester);
         final Curriculum curriculum = curriculumRepository.findById(curriculumId).orElseThrow();
         List<Semester> curriculumSemesters = new ArrayList<>(curriculum.getSemesters());
         curriculumSemesters.add(semester);
         curriculum.setSemesters(curriculumSemesters);
-        curriculumRepository.save(curriculum);
+        semester.setCurriculum(curriculum);
+        semesterRepository.save(semester);
     }
 
     public void addCourse(Long semesterId, String courseId, String lecturerId) {
@@ -57,5 +57,15 @@ public class SemesterService {
 
     public SemesterDto getSemesterById(Long id) {
         return SemesterMapper.mapToSemesterDto(semesterRepository.findById(id).orElseThrow());
+    }
+
+    public void deleteSemester(Long id) {
+        semesterRepository.deleteById(id);
+    }
+
+    public void deleteCourse(Long semesterId, String courseId) {
+        final Semester semester = semesterRepository.findById(semesterId).orElseThrow();
+        semester.getCourses().removeIf(course -> course.getCourse().getId().equals(courseId));
+        semesterRepository.save(semester);
     }
 }

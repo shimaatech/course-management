@@ -21,7 +21,10 @@ public class Semester {
 
     private String name;
 
-    @OneToMany()
+    @OneToMany(cascade = CascadeType.ALL)
     private List<CurriculumCourse> courses = new ArrayList<>();
+
+    @ManyToOne
+    private Curriculum curriculum;
 
 }

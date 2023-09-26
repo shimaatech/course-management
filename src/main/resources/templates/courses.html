@@ -7,6 +7,22 @@
     <meta charset="UTF-8">
     <title>Courses</title>
 
+    <script>
+          async function deleteCourse(courseId) {
+            const url = '/courses/' + courseId;
+            let resp = await fetch(url, {
+                        method: 'DELETE',
+                    });
+                if (!resp.ok) {
+                    error = await resp.text();
+                    console.error(error);
+                    window.alert("Cannot delete course because it's in some curriculum or it's a pre course of another course");
+                }
+            window.location = '/courses';
+          }
+</script>
+
+
 </head>
 
 <body>
@@ -33,6 +49,8 @@
                 <td th:with="hasPreCourse=${course.preCourse != null}">
                     <div th:replace=":: pre-course-selector(course=${course})"></div>
                 </td>
+                <td><a class="btn btn-outline-success" th:href="@{/courses/{id}/edit(id=${course.id})}"><i class="bi bi-pen"></i></a></td>
+                <td><a class="btn btn-outline-danger" th:attr="onclick='deleteCourse(\'' + ${course.id} + '\')'"><i class="bi bi-trash"></i></a></td>
             </tr>
             </tbody>
         </table>
