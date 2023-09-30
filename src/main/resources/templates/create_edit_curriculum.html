@@ -5,7 +5,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Create Curriculum</title>
+    <title th:if="${editMode}">Update Curriculum</title>
+    <title th:unless="${editMode}">Add Curriculum</title>
 </head>
 
 <body>
@@ -17,10 +18,11 @@
         <div class="row col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Create Curriculum</h2>
+                    <h2 th:if="${editMode}" class="text-center">Update Curriculum</h2>
+                    <h2 th:unless="${editMode}" class="text-center">Update Curriculum</h2>
                 </div>
                 <div class="card-body">
-                    <form role="form" method="post" th:action="@{/curriculums}" th:object="${newCurriculum}">
+                    <form role="form" th:method="${editMode? 'put': 'post'}" th:action="@{/curriculums}" th:object="${newCurriculum}">
                         <div class="mb-3">
                             <label class="form-label"> Start Year </label>
                             <input
@@ -66,6 +68,13 @@
                         </div>
 
 
+                        <input
+                                type="hidden"
+                                class="form-control"
+                                id="id"
+                                name="id"
+                                th:value="*{id}"
+                        />
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

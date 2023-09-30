@@ -5,7 +5,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add Course</title>
+    <title th:if="${editMode}">Update Semester</title>
+    <title th:unless="${editMode}">Add Semester</title>
+
 </head>
 
 <body>
@@ -15,7 +17,8 @@
     <!-- dialog-template.html -->
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title">New Semester</h5>
+            <h5 th:unless="${editMode}" class="modal-title">New Semester</h5>
+            <h5 th:if="${editMode}" class="modal-title">Update Semester</h5>
             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -31,7 +34,7 @@
 
     <div class="container p-3">
         <div class="row col-md-8 offset-md-2">
-            <form role="form" method="post" th:action="@{/semesters}" th:object="${newSemester}">
+            <form role="form" th:method="${editMode? 'put': 'post'}" th:action="@{/semesters}" th:object="${newSemester}">
                 <div class="mb-3">
                     <label class="form-label"> Name </label>
                     <input
@@ -49,6 +52,15 @@
                         id="curriculumId"
                         name="curriculumId"
                         th:value="${curriculumId}"
+                />
+
+
+                <input
+                        type="hidden"
+                        class="form-control"
+                        id="id"
+                        name="id"
+                        th:value="*{id}"
                 />
 
                 <button type="submit" class="btn btn-primary">Submit</button>

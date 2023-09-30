@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -40,19 +41,35 @@ public class LecturerController {
         return "redirect:/lecturers";
     }
 
+    @PutMapping()
+    public String updateLecturer(LecturerDto lecturerDto) {
+        lecturerService.updateLecturer(lecturerDto);
+        return "redirect:/lecturers";
+    }
+
+
+    @GetMapping("/{id}/edit")
+    public String editLecturer(@PathVariable("id") String lecturerId, Model model) {
+        final LecturerDto lecturerDto = lecturerService.getLecturerById(lecturerId);
+        model.addAttribute("editMode", true);
+        return newOrEditLecturer(model, lecturerDto);
+    }
+
 
     @GetMapping("/new")
     public String newLecturerForm(Model model) {
         final LecturerDto lecturerDto = new LecturerDto();
-        lecturerDto.setPassword(generatePassword());
+        return newOrEditLecturer(model, lecturerDto);
+    }
+
+    private String newOrEditLecturer(Model model, LecturerDto lecturerDto) {
         model.addAttribute("lecturer", lecturerDto);
         model.addAttribute("allCourses", courseService.getAllCourses());
         model.addAttribute("selectedCourses", Collections.emptyList());
-        return "add_lecturer";
-    }
-
-    private static String generatePassword() {
-        return GeneralUtils.generateRandomPassword(10);
+        if (!model.containsAttribute("editMode")) {
+            model.addAttribute("editMode", false);
+        }
+        return "add_edit_lecturer";
     }
 
 
@@ -77,9 +94,7 @@ public class LecturerController {
     @PostMapping("/{id}/new-password")
     @ResponseBody
     public String generateNewPassword(@PathVariable("id") String lecturerId) {
-        final String password = generatePassword();
-        lecturerService.updateLecturerPassword(lecturerId, password);
-        return password;
+        return lecturerService.updateLecturerPassword(lecturerId);
     }
 
     @DeleteMapping("/{id}")

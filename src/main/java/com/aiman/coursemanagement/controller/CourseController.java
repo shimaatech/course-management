@@ -1,6 +1,7 @@
 package com.aiman.coursemanagement.controller;
 
 import com.aiman.coursemanagement.dto.CourseDto;
+import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -37,12 +40,34 @@ public class CourseController {
     }
 
 
+    @PutMapping()
+    public String updateCourse(CourseDto courseDto) {
+        courseService.updateCourse(courseDto);
+        return "redirect:/courses";
+    }
+
+
     @GetMapping("/new")
     public String newCourseForm(Model model) {
-        final CourseDto courseDto = new CourseDto();
+        return newOrEditCourse(model, new CourseDto());
+    }
+
+
+    @GetMapping("/{id}/edit")
+    public String editCourse(@PathVariable("id") String courseId, Model model) {
+        final CourseDto courseDto = courseService.getCourseById(courseId);
+        model.addAttribute("editMode", true);
+        return newOrEditCourse(model, courseDto);
+    }
+
+
+    private String newOrEditCourse(Model model, CourseDto courseDto) {
         model.addAttribute("newCourse", courseDto);
         model.addAttribute("courses", courseService.getAllCourses());
-        return "add_course";
+        if (!model.containsAttribute("editMode")) {
+            model.addAttribute("editMode", false);
+        }
+        return "add_edit_course";
     }
 
 

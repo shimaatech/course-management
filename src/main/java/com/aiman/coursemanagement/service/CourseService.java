@@ -9,6 +9,7 @@ import com.aiman.coursemanagement.repository.CourseRepository;
 import io.micrometer.common.util.StringUtils;
 import org.codehaus.groovy.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class CourseService {
     }
 
     public List<CourseDto> getAllCourses() {
-        return courseRepository.findAll().stream().map(CourseMapper::mapToCourseDto).toList();
+        return courseRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream().map(CourseMapper::mapToCourseDto).toList();
     }
 
     public void createCourse(CourseDto courseDto, String preCourseId) {
@@ -65,5 +66,12 @@ public class CourseService {
 
     public void deleteCourse(String courseId) {
         courseRepository.deleteById(courseId);
+    }
+
+    public void updateCourse(CourseDto courseDto) {
+        Course courseToUpdate = courseRepository.findById(courseDto.getId()).orElseThrow();
+        courseToUpdate.setHours(courseDto.getHours());
+        courseToUpdate.setName(courseDto.getName());
+        courseRepository.save(courseToUpdate);
     }
 }

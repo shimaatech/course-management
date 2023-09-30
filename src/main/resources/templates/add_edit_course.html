@@ -5,7 +5,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add Course</title>
+    <title th:if="${editMode}">Update Course</title>
+    <title th:unless="${editMode}">Add Course</title>
 </head>
 
 <body>
@@ -17,13 +18,14 @@
         <div class="row col-md-8 offset-md-2">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Add Course</h2>
+                    <h2 th:if=${editMode} class="text-center">Update Course</h2>
+                    <h2 th:unless=${editMode} class="text-center">Add Course</h2>
                 </div>
                 <div class="card-body">
-                    <form role="form" method="post" th:action="@{/courses}" th:object="${newCourse}">
+                    <form role="form" th:method="${editMode? 'put': 'post'}" th:action="@{/courses}" th:object="${newCourse}">
                         <div class="mb-3">
                             <label class="form-label"> ID </label>
-                            <input
+                            <input  th:readonly="${editMode}"
                                     type="text"
                                     class="form-control"
                                     id="id"
@@ -54,7 +56,7 @@
                             />
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3" th:unless="${editMode}">
                             <label class="form-label"> Pre course </label>
                             <select id="preCourse" name="preCourseId">
                                 <option value="">None</option>

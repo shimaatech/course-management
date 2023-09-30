@@ -8,7 +8,9 @@ import com.aiman.coursemanagement.mapper.LecturerMapper;
 import com.aiman.coursemanagement.model.Role;
 import com.aiman.coursemanagement.repository.CourseRepository;
 import com.aiman.coursemanagement.repository.LecturerRepository;
+import com.aiman.coursemanagement.utils.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +30,12 @@ public class LecturerService {
     }
 
     public List<LecturerDto> getAllLecturers() {
-        return lecturerRepository.findAll().stream().map(LecturerMapper::mapToLecturerDto).toList();
+        return lecturerRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream().map(LecturerMapper::mapToLecturerDto).toList();
     }
 
     public void createLecturer(LecturerDto lecturerDto, List<String> coursesIds) {
         final Lecturer lecturer = LecturerMapper.mapToLecturer(lecturerDto);
+        lecturerDto.setPassword(generatePassword());
         setCourses(lecturer, coursesIds);
         lecturerRepository.save(lecturer);
         userService.createUser(lecturerDto.getId(), lecturerDto.getPassword(), Role.Lecturer);
@@ -58,11 +61,26 @@ public class LecturerService {
         return lecturerRepository.getLecturersByCourseId(courseId).stream().map(LecturerMapper::mapToLecturerDto).toList();
     }
 
-    public void updateLecturerPassword(String lecturerId, String password) {
+    public String updateLecturerPassword(String lecturerId) {
+        final String password = generatePassword();
         userService.updateUserPassword(lecturerId, password);
+        return password;
     }
 
     public void deleteLecturer(String lecturerId) {
         lecturerRepository.deleteById(lecturerId);
+    }
+
+    public void updateLecturer(LecturerDto lecturerDto) {
+        final Lecturer lecturerToUpdate = lecturerRepository.findById(lecturerDto.getId()).orElseThrow();
+        lecturerToUpdate.setName(lecturerDto.getName());
+        lecturerToUpdate.setMail(lecturerDto.getMail());
+        lecturerToUpdate.setLastName(lecturerDto.getLastName());
+        lecturerToUpdate.setPhone(lecturerDto.getPhone());
+        lecturerRepository.save(lecturerToUpdate);
+    }
+
+    private static String generatePassword() {
+        return GeneralUtils.generateRandomPassword(10);
     }
 }

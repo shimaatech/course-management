@@ -39,11 +39,32 @@ public class CurriculumController {
     }
 
 
+    @PutMapping()
+    public String updateCurriculum(CurriculumDto curriculumDto) {
+        curriculumService.updateCurriculum(curriculumDto);
+        return "redirect:/curriculums";
+    }
+
+
+    @GetMapping("/{id}/edit")
+    public String editCurriculum(@PathVariable("id") Long curriculumId, Model model) {
+        final CurriculumDto curriculumDto = curriculumService.getCurriculumById(curriculumId);
+        model.addAttribute("editMode", true);
+        return newOrEditCurriculum(model, curriculumDto);
+    }
+
     @GetMapping("/new")
-    public String newCourseForm(Model model) {
-        final CurriculumDto curriculumDto = new CurriculumDto();
+    public String newCurriculumForm(Model model) {
+        return newOrEditCurriculum(model, new CurriculumDto());
+    }
+
+
+    private String newOrEditCurriculum(Model model, CurriculumDto curriculumDto) {
         model.addAttribute("newCurriculum", curriculumDto);
-        return "create_curriculum";
+        if (!model.containsAttribute("editMode")) {
+            model.addAttribute("editMode", false);
+        }
+        return "create_edit_curriculum";
     }
 
 

@@ -17,6 +17,15 @@
         $('#myModal').modal('show');
     }
 
+
+    async function openEditSemesterModal(semesterId) {
+        var resp = await fetch('/semesters/' + semesterId + '/edit?curriculumId=' + [[${curriculum.id}]]);
+        var data = await resp.text();
+        $('#myModal .modal-content').html(data);
+        // Show the modal
+        $('#myModal').modal('show');
+    }
+
     async function openAddCourseModal(semesterId) {
         console.log(semesterId);
         var curriculumId = [[${curriculum.id}]];
@@ -125,7 +134,7 @@
 <div th:fragment="semester-table(semester)">
     <h4 class="d-inline" th:text="${semester.name}"></h4>
     <div class="p-2 d-inline">
-        <a class="btn btn-outline-success" th:href="@{/semesters/{id}/edit(id=${semester.id})}"><i
+        <a class="btn btn-outline-success" th:onclick="|openEditSemesterModal(${semester.id})|"><i
                 class="bi bi-pen"></i></a>
         <a class="btn btn-outline-danger" th:attr="onclick='deleteSemester(\'' + ${semester.id} + '\')'"><i
                 class="bi bi-trash"></i></a>

@@ -34,17 +34,42 @@ public class SemesterController {
 
 
 
+    @GetMapping("/{id}/edit")
+    public String editCourse(@PathVariable("id") Long semesterId, @RequestParam("curriculumId") Long curriculumId, Model model) {
+        final SemesterDto semesterDto = semesterService.getSemesterById(semesterId);
+        model.addAttribute("curriculumId", curriculumId);
+        model.addAttribute("editMode", true);
+        return newOrEditSemester(model, semesterDto);
+    }
+
     @GetMapping("/new")
     public String newSemester(@RequestParam("curriculumId") Long curriculumId, Model model) {
-        final SemesterDto semesterDto = new SemesterDto();
-        model.addAttribute("newSemester", semesterDto);
         model.addAttribute("curriculumId", curriculumId);
-        return "add_semester";
+        return newOrEditSemester(model, new SemesterDto());
     }
+
+
+    private String newOrEditSemester(Model model, SemesterDto semesterDto) {
+        model.addAttribute("newSemester", semesterDto);
+        if (!model.containsAttribute("editMode")) {
+            model.addAttribute("editMode", false);
+        }
+        return "add_edit_semester";
+    }
+
+
 
     @PostMapping()
     public String createSemester(SemesterDto semesterDto, @RequestParam(name = "curriculumId", required = true) Long curriculumId) {
         semesterService.createSemester(semesterDto, curriculumId);
+        return "redirect:/curriculums/" + curriculumId + "/manage-semesters";
+    }
+
+
+
+    @PutMapping()
+    public String updateSemester(SemesterDto semesterDto, @RequestParam(name = "curriculumId", required = true) Long curriculumId) {
+        semesterService.updateSemester(semesterDto);
         return "redirect:/curriculums/" + curriculumId + "/manage-semesters";
     }
 

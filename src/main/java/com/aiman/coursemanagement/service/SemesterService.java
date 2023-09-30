@@ -68,4 +68,11 @@ public class SemesterService {
         semester.getCourses().removeIf(course -> course.getCourse().getId().equals(courseId));
         semesterRepository.save(semester);
     }
+
+    public void updateSemester(SemesterDto semesterDto) {
+        final Semester semesterToUpdate = semesterRepository.findById(semesterDto.getId()).orElseThrow();
+        semesterToUpdate.setName(semesterDto.getName());
+        semesterRepository.save(semesterToUpdate);
+    }
+
 }

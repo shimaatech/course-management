@@ -5,7 +5,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Add Lecturer</title>
+    <title th:if="${editMode}">Update Lecturer</title>
+    <title th:unless="${editMode}">Add Lecturer</title>
 </head>
 
 <body>
@@ -16,13 +17,14 @@
         <div class="row">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Add Lecturer</h2>
+                    <h2 class="text-center" th:unless="${editMode}">Add Lecturer</h2>
+                    <h2 class="text-center" th:if="${editMode}">Update Lecturer</h2>
                 </div>
                 <div class="card-body">
-                    <form role="form" method="post" th:action="@{/lecturers}" th:object="${lecturer}">
+                    <form role="form" th:method="${editMode? 'put': 'post'}" th:action="@{/lecturers}" th:object="${lecturer}">
                         <div class="mb-3">
                             <label class="form-label"> ID </label>
-                            <input
+                            <input  th:readonly="${editMode}"
                                     type="text"
                                     class="form-control"
                                     id="id"
@@ -79,19 +81,7 @@
                         </div>
 
 
-                        <div class="mb-3">
-                            <label class="form-label"> Password </label>
-                            <input
-                                    readonly
-                                    type="text"
-                                    class="form-control"
-                                    id="password"
-                                    name="password"
-                                    th:field="*{password}"
-                            />
-                        </div>
-
-                        <div class="mb-3 p-3">
+                        <div class="mb-3 p-3" th:unless="${editMode}">
                             <label class="form-label"> Courses </label>
                             <div th:replace="fragments/courses_add_remove :: courses-add-remove(allCourses=${allCourses}, selectedCourses=${selectedCourses})"></div>
                         </div>
