@@ -3,18 +3,16 @@ package com.aiman.coursemanagement.controller;
 import com.aiman.coursemanagement.dto.CourseDto;
 import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.dto.SemesterDto;
-import com.aiman.coursemanagement.entity.Lecturer;
-import com.aiman.coursemanagement.entity.Semester;
 import com.aiman.coursemanagement.service.CourseService;
+import com.aiman.coursemanagement.service.CurriculumService;
 import com.aiman.coursemanagement.service.LecturerService;
 import com.aiman.coursemanagement.service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,12 +21,15 @@ public class SemesterController {
 
     private final SemesterService semesterService;
     private final CourseService courseService;
+
+    private final CurriculumService curriculumService;
     private final LecturerService lecturerService;
 
     @Autowired
-    public SemesterController(SemesterService semesterService, CourseService courseService, LecturerService lecturerService) {
+    public SemesterController(SemesterService semesterService, CourseService courseService, CurriculumService curriculumService, LecturerService lecturerService) {
         this.semesterService = semesterService;
         this.courseService = courseService;
+        this.curriculumService = curriculumService;
         this.lecturerService = lecturerService;
     }
 
@@ -81,7 +82,11 @@ public class SemesterController {
             @RequestParam(value = "courseId", required = false) String courseId, Model model) {
 
         final SemesterDto semester = semesterService.getSemesterById(semesterId);
-        final List<CourseDto> courses = courseService.getAllCourses();
+        final List<CourseDto> courses = new ArrayList<>(courseService.getAllCourses());
+
+        // remove courses that are already in the curriculum.
+        final List<String> curriculumCourses = curriculumService.getCurriculumCourses(curriculumId);
+        courses.removeIf(course -> curriculumCourses.contains(course.getId()));
 
         model.addAttribute("semester", semester);
         model.addAttribute("courses", courses);
@@ -95,10 +100,15 @@ public class SemesterController {
             model.addAttribute("selectedCourse", selectedCourse);
             model.addAttribute("lecturers", courseLecturers);
 
+            CourseDto preCourse = selectedCourse.getPreCourse();
+            if (preCourse != null && !curriculumCourses.contains(preCourse.getId())) {
+                model.addAttribute("preCourse", preCourse);
+            }
         }
 
         return "add_semester_course";
     }
+
 
     @PostMapping("/{id}/add-course")
     public String addCourse(

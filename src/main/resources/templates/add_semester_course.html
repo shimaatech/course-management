@@ -74,7 +74,11 @@
                         th:value="${curriculumId}"
                 />
 
-                <button type="submit" class="btn btn-primary" >Submit</button>
+                <div th:if="${preCourse != null}" class="bg-warning p-3">
+                    This course has a pre course that was not added to the curriculum yet: [[${preCourse.name}]] ([[${preCourse.id}]])
+                </div>
+
+                <button type="submit" class="mt-3 btn btn-primary" >Submit</button>
             </form>
         </div>
     </div>

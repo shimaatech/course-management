@@ -16,7 +16,7 @@
                 if (!resp.ok) {
                     error = await resp.text();
                     console.error(error);
-                    window.alert("Cannot delete course because it's in some curriculum or it's a pre course of another course or it's taught by some lecturer");
+                    window.alert("Cannot delete course because it's in some curriculum, or it's a pre course of another course, or it's taught by some lecturer");
                 }
             window.location = '/courses';
           }

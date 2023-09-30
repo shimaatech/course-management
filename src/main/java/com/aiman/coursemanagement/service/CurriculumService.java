@@ -3,7 +3,9 @@ package com.aiman.coursemanagement.service;
 import com.aiman.coursemanagement.dto.CurriculumDto;
 import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.entity.Curriculum;
+import com.aiman.coursemanagement.entity.CurriculumCourse;
 import com.aiman.coursemanagement.entity.Lecturer;
+import com.aiman.coursemanagement.entity.Semester;
 import com.aiman.coursemanagement.mapper.CurriculumMapper;
 import com.aiman.coursemanagement.mapper.LecturerMapper;
 import com.aiman.coursemanagement.repository.CurriculumRepository;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -49,5 +52,15 @@ public class CurriculumService {
         curriculumToUpdate.setHebrewStartYear(curriculumDto.getHebrewStartYear());
         curriculumToUpdate.setHebrewEndYear(curriculumDto.getHebrewEndYear());
         curriculumRepository.save(curriculumToUpdate);
+    }
+
+    public List<String> getCurriculumCourses(Long curriculumId) {
+        return curriculumRepository.findById(curriculumId).orElseThrow()
+                .getSemesters()
+                .stream()
+                .map(Semester::getCourses)
+                .flatMap(Collection::stream)
+                .map(course -> course.getCourse().getId())
+                .toList();
     }
 }
