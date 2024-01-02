@@ -22,6 +22,8 @@ public class Course {
 
     private Integer hours;
 
+    private String syllabusPath;
+
     @ManyToOne
     private Course preCourse;
 

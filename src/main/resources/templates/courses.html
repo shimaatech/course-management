@@ -39,6 +39,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Hours</th>
+            <th>Syllabus</th>
             <th>Pre Course</th>
             <td></td>
             <td></td>
@@ -48,6 +49,7 @@
                 <td th:text="*{id}"></td>
                 <td th:text="*{name}"></td>
                 <td th:text="*{hours}"></td>
+                <td><a th:href="*{syllabusPath}">Syllabus</a></td>
                 <td th:with="hasPreCourse=${course.preCourse != null}">
                     <div th:replace=":: pre-course-selector(course=${course})"></div>
                 </td>

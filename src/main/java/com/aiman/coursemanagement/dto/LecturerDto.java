@@ -30,6 +30,8 @@ public class LecturerDto {
 
     private String password;
 
+    private String cvPath;
+
     private List<CourseDto> courses = new ArrayList<>();
 
 }

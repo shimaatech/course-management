@@ -22,7 +22,7 @@
                     <h2 th:unless=${editMode} class="text-center">Add Course</h2>
                 </div>
                 <div class="card-body">
-                    <form role="form" th:method="${editMode? 'put': 'post'}" th:action="@{/courses}" th:object="${newCourse}">
+                    <form role="form" th:method="${editMode? 'put': 'post'}" th:action="@{/courses}" th:object="${newCourse}" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label class="form-label"> ID </label>
                             <input  th:readonly="${editMode}"
@@ -53,6 +53,17 @@
                                     id="hours"
                                     name="hours"
                                     th:field="*{hours}"
+                            />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"> Syllabus </label>
+                            <input
+                                    type="file"
+                                    class="form-control"
+                                    id="syllabus"
+                                    name="syllabus"
+                                    accept=".txt, .pdf, .doc, .docx"
                             />
                         </div>
 

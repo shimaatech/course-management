@@ -72,6 +72,9 @@ public class CourseService {
         Course courseToUpdate = courseRepository.findById(courseDto.getId()).orElseThrow();
         courseToUpdate.setHours(courseDto.getHours());
         courseToUpdate.setName(courseDto.getName());
+        if (!StringUtils.isEmpty(courseDto.getSyllabusPath())) {
+            courseToUpdate.setSyllabusPath(courseDto.getSyllabusPath());
+        }
         courseRepository.save(courseToUpdate);
     }
 }

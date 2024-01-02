@@ -13,6 +13,7 @@ public class CourseMapper {
                 .id(dto.getId())
                 .name(dto.getName())
                 .hours(dto.getHours())
+                .syllabusPath(dto.getSyllabusPath())
                 .preCourse(mapToCourse(dto.getPreCourse()))
                 .build();
     }
@@ -26,6 +27,7 @@ public class CourseMapper {
                 .id(course.getId())
                 .name(course.getName())
                 .hours(course.getHours())
+                .syllabusPath(course.getSyllabusPath())
                 .preCourse(mapToCourseDto(course.getPreCourse()))
                 .build();
     }

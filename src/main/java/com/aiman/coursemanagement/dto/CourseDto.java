@@ -21,6 +21,8 @@ public class CourseDto {
 
     private Integer hours;
 
+    private String syllabusPath;
+
     private CourseDto preCourse;
 
 }

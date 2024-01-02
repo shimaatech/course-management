@@ -3,16 +3,20 @@ package com.aiman.coursemanagement.controller;
 import com.aiman.coursemanagement.dto.CourseDto;
 import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.service.CourseService;
+import com.aiman.coursemanagement.service.UploadService;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("courses")
@@ -20,9 +24,12 @@ public class CourseController {
 
     private final CourseService courseService;
 
+    private final UploadService uploadService;
+
     @Autowired
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService, UploadService uploadService) {
         this.courseService = courseService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping()
@@ -34,14 +41,16 @@ public class CourseController {
 
 
     @PostMapping()
-    public String createCourse(CourseDto courseDto, @RequestParam(name = "preCourseId", required = false) String preCourseId) {
+    public String createCourse(CourseDto courseDto, @RequestParam(name = "preCourseId", required = false) String preCourseId, @RequestParam(value = "syllabus", required = false) MultipartFile syllabusFile) throws IOException {
+        uploadCourseSyllabus(courseDto, syllabusFile);
         courseService.createCourse(courseDto, preCourseId);
         return "redirect:/courses";
     }
 
 
     @PutMapping()
-    public String updateCourse(CourseDto courseDto) {
+    public String updateCourse(CourseDto courseDto, @RequestParam(value = "syllabus", required = false) MultipartFile syllabusFile) throws IOException {
+        uploadCourseSyllabus(courseDto, syllabusFile);
         courseService.updateCourse(courseDto);
         return "redirect:/courses";
     }
@@ -96,5 +105,18 @@ public class CourseController {
     public void deleteLecturer(@PathVariable("id") String courseId) {
         courseService.deleteCourse(courseId);
     }
+
+
+    @GetMapping("/syllabus")
+    public ResponseEntity<Resource> downloadFile(@RequestParam("path") String path) throws IOException {
+        return uploadService.downloadFile(path);
+    }
+    private void uploadCourseSyllabus(CourseDto courseDto, MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            String cvPath = uploadService.uploadFile(file, "courses/syllabus", "syllabus/" + UUID.randomUUID());
+            courseDto.setSyllabusPath(cvPath);
+        }
+    }
+
 
 }

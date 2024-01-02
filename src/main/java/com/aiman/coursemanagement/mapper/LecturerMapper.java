@@ -12,6 +12,7 @@ public class LecturerMapper {
                 .lastName(dto.getLastName())
                 .phone(dto.getPhone())
                 .mail(dto.getMail())
+                .cvPath(dto.getCvPath())
                 .courses(dto.getCourses().stream().map(CourseMapper::mapToCourse).toList())
                 .build();
     }
@@ -23,6 +24,7 @@ public class LecturerMapper {
                 .lastName(lecturer.getLastName())
                 .phone(lecturer.getPhone())
                 .mail(lecturer.getMail())
+                .cvPath(lecturer.getCvPath())
                 .courses(lecturer.getCourses().stream().map(CourseMapper::mapToCourseDto).toList())
                 .build();
     }

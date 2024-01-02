@@ -4,15 +4,27 @@ import com.aiman.coursemanagement.dto.CourseDto;
 import com.aiman.coursemanagement.dto.LecturerDto;
 import com.aiman.coursemanagement.service.CourseService;
 import com.aiman.coursemanagement.service.LecturerService;
-import com.aiman.coursemanagement.utils.GeneralUtils;
+import com.aiman.coursemanagement.service.UploadService;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/lecturers")
@@ -21,10 +33,13 @@ public class LecturerController {
     private final LecturerService lecturerService;
     private final CourseService courseService;
 
+    private final UploadService uploadService;
+
     @Autowired
-    public LecturerController(LecturerService lecturerService, CourseService courseService) {
+    public LecturerController(LecturerService lecturerService, CourseService courseService, UploadService uploadService) {
         this.lecturerService = lecturerService;
         this.courseService = courseService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping()
@@ -36,15 +51,30 @@ public class LecturerController {
 
 
     @PostMapping()
-    public String createLecturer(LecturerDto lecturerDto, @RequestParam(name = "coursesIds", required = false) List<String> coursesIds) {
+    public String createLecturer(LecturerDto lecturerDto, @RequestParam(name = "coursesIds", required = false) List<String> coursesIds, @RequestParam(value = "cv", required = false) MultipartFile cvFile) throws IOException {
+        uploadLecturerCv(lecturerDto, cvFile);
         lecturerService.createLecturer(lecturerDto, coursesIds);
         return "redirect:/lecturers";
     }
 
     @PutMapping()
-    public String updateLecturer(LecturerDto lecturerDto) {
+    public String updateLecturer(LecturerDto lecturerDto, @RequestParam(value = "cv", required = false) MultipartFile cvFile) throws IOException {
+        uploadLecturerCv(lecturerDto, cvFile);
         lecturerService.updateLecturer(lecturerDto);
         return "redirect:/lecturers";
+    }
+
+    @GetMapping("/cv")
+    public ResponseEntity<Resource> downloadFile(@RequestParam("path") String path) throws IOException {
+        return uploadService.downloadFile(path);
+    }
+
+
+    private void uploadLecturerCv(LecturerDto lecturerDto, MultipartFile file) throws IOException {
+        if (file != null && !StringUtils.isEmpty(file.getName())) {
+            String cvPath = uploadService.uploadFile(file, "lecturers/cv", "cv/" + UUID.randomUUID());
+            lecturerDto.setCvPath(cvPath);
+        }
     }
 
 

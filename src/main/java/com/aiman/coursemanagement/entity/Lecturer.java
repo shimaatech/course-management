@@ -26,6 +26,8 @@ public class Lecturer {
 
     private String mail;
 
+    private String cvPath;
+
     @ManyToMany()
     private List<Course> courses = new ArrayList<>();
 }

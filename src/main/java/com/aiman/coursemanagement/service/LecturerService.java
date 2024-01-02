@@ -12,6 +12,7 @@ import com.aiman.coursemanagement.utils.GeneralUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
@@ -77,6 +78,9 @@ public class LecturerService {
         lecturerToUpdate.setMail(lecturerDto.getMail());
         lecturerToUpdate.setLastName(lecturerDto.getLastName());
         lecturerToUpdate.setPhone(lecturerDto.getPhone());
+        if (!StringUtils.isEmpty(lecturerDto.getCvPath())) {
+            lecturerToUpdate.setCvPath(lecturerDto.getCvPath());
+        }
         lecturerRepository.save(lecturerToUpdate);
     }
 

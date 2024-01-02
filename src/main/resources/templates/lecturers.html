@@ -56,6 +56,7 @@
             <th>Mail</th>
             <th>Password</th>
             <th>Courses</th>
+            <th>CV</th>
             <td></td>
             <td></td>
             </thead>
@@ -66,6 +67,7 @@
                 <td th:text="*{lastName}"></td>
                 <td th:text="*{phone}"></td>
                 <td th:text="*{mail}"></td>
+                <td><a th:href="*{cvPath}">CV</a></td>
                 <td><a class="btn btn-primary text-nowrap" th:attr="onclick='generateNewPassword(\'' + ${lecturer.id} + '\')'">New Password</a></td>
                 <td><a class="btn btn-primary" th:href="@{/lecturers/{id}/manage-courses(id=${lecturer.id})}">Manage</a></td>
                 <td><a class="btn btn-outline-success" th:href="@{/lecturers/{id}/edit(id=${lecturer.id})}"><i class="bi bi-pen"></i></a></td>
